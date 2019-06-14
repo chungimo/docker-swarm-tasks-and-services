@@ -32,14 +32,14 @@ services:
       - portainer_data:/data
     networks:
       - agent_network
-      - traefik-public
+      - ${TRAEFIK_NETWORK}
     deploy:
       mode: replicated
       replicas: 1
       placement:
         constraints: [node.role == manager]
       labels:
-        - traefik.docker.network=traefik-public
+        - traefik.docker.network=${TRAEFIK_NETWORK}
         - traefik.backend={{ .Stack.Name }}_portainer
         - traefik.port=9000
         - traefik.weight=10
@@ -57,7 +57,7 @@ networks:
     attachable: true
   traefik-public:
     external:
-      name: traefik-public
+      name: ${TRAEFIK_NETWORK}
 
 volumes:
   portainer_data:
