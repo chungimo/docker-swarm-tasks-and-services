@@ -1,12 +1,11 @@
 Docker Swarm task for Traefik + Consul
 ---
+[Traefik](https://github.com/containous/traefik) (pronounced traffic) is a modern HTTP reverse proxy and load balancer that makes deploying microservices easy. Traefik integrates with your existing infrastructure components (Docker, Swarm mode, Kubernetes, Marathon, Consul, Etcd, Rancher, Amazon ECS, ...) and configures itself automatically and dynamically. Pointing Traefik at your orchestrator should be the only configuration step you need.
+
+#### Setup
 Task for deploying Traefik with consul while defining the number of replicas. Shell file to set the variables or take in from deployment.
 
-* Create docker network
-* Set environment variables
-* Modify docker-compose file
-* Deploy ``docker stack deploy -c traefik_consul.yml.yml traefik-consul``
-
+Set these environment variables:
 ```
 #email for domain registrations
   export EMAIL=test@domain.dev
@@ -25,3 +24,6 @@ Task for deploying Traefik with consul while defining the number of replicas. Sh
   export CONSUL_REPLICAS=3
   export TRAEFIK_REPLICAS=$(docker node ls -q | wc -l)
 ```
+
+#### Docker stack deploy
+`docker stack deploy -c traefik_consul.yml traefik_consul`
