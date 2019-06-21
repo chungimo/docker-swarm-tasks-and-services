@@ -1,0 +1,102 @@
+version: '3'
+services:
+  netbox: &netbox
+    build:
+      context: .
+      args:
+        - BRANCH=${VERSION-master}
+    image: netboxcommunity/netbox:${VERSION-latest}
+    depends_on:
+      - postgres
+      - redis
+      - netbox-worker
+    env_file: env/netbox.env
+    networks:
+      - net
+    volumes:
+      - ./startup_scripts:/opt/netbox/startup_scripts:z,ro
+      - ./initializers:/opt/netbox/initializers:z,ro
+      - ./configuration:/etc/netbox/config:z,ro
+      - ./reports:/etc/netbox/reports:z,ro
+      - netbox-nginx-config:/etc/netbox-nginx:z
+      - netbox-static-files:/opt/netbox/netbox/static:z
+      - netbox-media-files:/opt/netbox/netbox/media:z
+
+  netbox-worker:
+    <<: *netbox
+    depends_on:
+      - redis
+    entrypoint:
+      - python3
+      - /opt/netbox/netbox/manage.py
+    networks:
+      - net
+    command:
+      - rqworker
+
+  nginx:
+    command: nginx -c /etc/netbox-nginx/nginx.conf
+    image: nginx:1.15-alpine
+    depends_on:
+      - netbox
+    networks:
+      - default
+      - net
+      - traefik-public
+    volumes:
+      - netbox-static-files:/opt/netbox/netbox/static:ro
+      - netbox-nginx-config:/etc/netbox-nginx/:ro
+    deploy:
+      mode: replicated
+      replicas: 1
+      labels:
+        - traefik.frontend.rule=Host:${HOSTNAME}
+        - traefik.enable=true
+        - traefik.port=8080
+        - traefik.tags=${TRAEFIK_PUBLIC_TAG:-traefik-public}
+        - traefik.docker.network=${TRAEFIK_NETWORK:-traefik-public}
+        # Traefik service that listens to HTTP
+        - traefik.redirectorservice.frontend.entryPoints=http
+        - traefik.redirectorservice.frontend.redirect.entryPoint=https
+        # Traefik service that listens to HTTPS
+        - traefik.webservice.frontend.entryPoints=https
+
+  postgres:
+    image: postgres:10.4-alpine
+    env_file: env/postgres.env
+    networks:
+      - net
+    volumes:
+      - netbox-postgres-data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:4-alpine
+    command:
+      - sh
+      - -c # this is to evaluate the $REDIS_PASSWORD from the env
+      - redis-server --appendonly yes --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
+    env_file: env/redis.env
+    networks:
+      - net
+    volumes:
+      - netbox-redis-data:/data
+
+volumes:
+  netbox-static-files:
+    driver: local
+  netbox-nginx-config:
+    driver: local
+  netbox-media-files:
+    driver: local
+  netbox-report-files:
+    driver: local
+  netbox-postgres-data:
+    driver: local
+  netbox-redis-data:
+    driver: local
+
+networks:
+  net:
+    driver: overlay
+  ${TRAEFIK_NETWORK}:
+    external: true

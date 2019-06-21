@@ -1,12 +1,11 @@
 # Portainer on Traefik
 Portainer stack requires the agent deployed to each node that will be required to modify system settings. This agent will reside on an agent_network that exposes the host at tcp 9001. The Portainer container will be limited to manager nodes only and be accessible through Traefik proxy.
 
-## Setup
+#### Setup
 ```
-export HOSTDOMAIN = domain.com
-export TRAEFIK_NETWORK = traefik-public
+export HOSTDOMAIN=domain.com
+export TRAEFIK_NETWORK=traefik-public
 ```
-
 
 #### Optional things to configure on agent
 ```
