@@ -25,4 +25,4 @@ export TRAEFIK_NETWORK=traefik-public
 
 Copy this docker-traefik-netbox.yml file into the directory and deploy.
 
-`docker stack deploy -c docker-traefik-netbox.yml netbox`
+`docker stack deploy -c docker-netbox.traefik.yml netbox`

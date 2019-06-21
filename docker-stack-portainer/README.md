@@ -32,7 +32,7 @@ volumes:
 `docker network create --driver overlay --attachable agent_network`
 
 #### Docker stack deploy
-`docker stack deploy -c portainer-agent-stack-traefik.yml portainer`
+`docker stack deploy -c docker-portainer.traefik.yml portainer`
 
 #### Bug fixes with Traefik and Portainer
 [Traefik label fixes](https://github.com/containous/traefik/issues/563#issuecomment-421360934)

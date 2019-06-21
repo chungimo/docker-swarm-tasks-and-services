@@ -28,7 +28,7 @@ export SLACK_USER=alertmanager
 ```
 
 #### Docker stack deploy
-`docker stack deploy -c docker-compose.traefik.yml swarmprom`
+`docker stack deploy -c docker-swarmprom.traefik.yml swarmprom`
 
 #### Testing URLs
 ```
