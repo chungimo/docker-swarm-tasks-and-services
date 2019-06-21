@@ -1,4 +1,4 @@
-Docker Swarm Task and Services
+Docker Swarm Task, Services, and Stacks
 ---
 
 <p align="center">
