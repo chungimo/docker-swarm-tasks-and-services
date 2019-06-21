@@ -4,6 +4,8 @@ Netbox on Traefik
 
 NetBox is an IP address management (IPAM) and data center infrastructure management (DCIM) tool. Initially conceived by the network engineering team at DigitalOcean, NetBox was developed specifically to address the needs of network and infrastructure engineers.
 
+NetBox runs as a web application atop the Django Python framework with a PostgreSQL database. For a complete list of requirements, see requirements.txt. The code is available on GitHub.
+
 This is a compose file to launch Netbox utilizing Traefik reverse proxy.
 
 #### Setup
