@@ -2,6 +2,8 @@ Swarmprom on Traefik
 ---
 [Swarmprom](https://github.com/stefanprodan/swarmprom) is a starter kit for Docker Swarm monitoring with Prometheus, Grafana, cAdvisor, Node Exporter, Alert Manager and Unsee.
 
+This particular compose file I removed Unsee as I prefer to use Alerta.io.
+
 #### Setup
 Services:
 - Prometheus (metrics database) http://<swarm-ip>:9090
