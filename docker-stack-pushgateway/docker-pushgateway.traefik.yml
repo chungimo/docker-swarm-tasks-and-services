@@ -1,0 +1,20 @@
+version: '3'
+services:
+  pushgateway:
+    image: prom/pushgateway
+    networks:
+      - traefik-public
+    deploy:
+      mode: replicated
+      replicas: 3
+      labels:
+        - traefik.frontend.rule=Host:${DOMAIN}
+        - traefik.enable=true
+        - traefik.port=9091
+        - traefik.tags=${TRAEFIK_PUBLIC_TAG:-traefik-public}
+        - traefik.docker.network=traefik-public
+        - traefik.redirectorservice.frontend.entryPoints=http
+
+networks:
+  traefik-public:
+    external: true
